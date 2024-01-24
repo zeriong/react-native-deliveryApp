@@ -1,7 +1,11 @@
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 
 function Complete() {
-  return <View />;
+  return (
+    <View>
+      <Text>완료</Text>
+    </View>
+  );
 }
 
 export default Complete;

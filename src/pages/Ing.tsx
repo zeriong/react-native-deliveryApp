@@ -1,11 +1,11 @@
 import {Text, View} from 'react-native';
 
-function Order() {
+function Ing() {
   return (
     <View>
-      <Text>주문</Text>
+      <Text>지도</Text>
     </View>
   );
 }
 
-export default Order;
+export default Ing;

@@ -1,7 +1,11 @@
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 
 function SignIn() {
-  return <View />;
+  return (
+    <View>
+      <Text>회원가입</Text>
+    </View>
+  );
 }
 
 export default SignIn;

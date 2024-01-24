@@ -1,7 +1,11 @@
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 
-function Settings() {
-  return <View />;
+function Setting() {
+  return (
+    <View>
+      <Text>설정</Text>
+    </View>
+  );
 }
 
-export default Settings;
+export default Setting;
