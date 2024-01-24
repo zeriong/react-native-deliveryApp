@@ -9,6 +9,7 @@ import {
 import {useCallback, useRef, useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App.tsx';
+import DismissKeyboardView from '../components/DismissKeyboardView.tsx';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 function SignIn({navigation}: SignInScreenProps) {
@@ -37,11 +38,10 @@ function SignIn({navigation}: SignInScreenProps) {
   // 회원가입 submit 함수
   const toSignUp = useCallback(() => {
     navigation.navigate('SignUp');
-    Alert.alert('회원가입', '회원가입 버튼입니다.');
   }, []);
 
   return (
-    <View>
+    <DismissKeyboardView>
       {/*이메일*/}
       <View style={styles.inputWrapper}>
         <Text style={styles.label}>이메일</Text>
@@ -96,7 +96,7 @@ function SignIn({navigation}: SignInScreenProps) {
           <Text>회원가입</Text>
         </Pressable>
       </View>
-    </View>
+    </DismissKeyboardView>
   );
 }
 
