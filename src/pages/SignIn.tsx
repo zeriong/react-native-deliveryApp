@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 import {useCallback, useRef, useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../App.tsx';
 import DismissKeyboardView from '../components/DismissKeyboardView.tsx';
+import {RootStackParamList} from '../../AppInner.tsx';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 function SignIn({navigation}: SignInScreenProps) {

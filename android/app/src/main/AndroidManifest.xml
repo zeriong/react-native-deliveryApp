@@ -2,7 +2,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- usesCleartextTraffic: http 요청 가능하도록 설정
+    (기본적으로 안드로이드앱에서 https 에서만 통신 요청할 수 있도록 설정되어있음) -->
     <application
+      android:usesCleartextTraffic="true"
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
