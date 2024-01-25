@@ -4,6 +4,7 @@ import rootReducer from './reducer';
 
 const store = configureStore({
   reducer: rootReducer,
+  // flipper 사용을 위한 미들웨어 추가 (RN에서는 __DEV__를 통해 개발환경을 체크할 수 있음)
   middleware: getDefaultMiddleware => {
     if (__DEV__) {
       const createDebugger = require('redux-flipper').default;
