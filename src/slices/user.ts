@@ -4,8 +4,9 @@ const initialState = {
   name: '',
   email: '',
   accessToken: '',
+  money: 0,
 };
-const user = createSlice({
+const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
@@ -14,8 +15,14 @@ const user = createSlice({
       state.name = action.payload.name;
       state.accessToken = action.payload.accessToken;
     },
+    setAccessToken(state, action) {
+      state.accessToken = action.payload;
+    },
+    setMoney(state, action) {
+      state.money = action.payload;
+    },
   },
-  extraReducers: builder => {},
+  extraReducers: () => {},
 });
 
-export default user;
+export default userSlice;
