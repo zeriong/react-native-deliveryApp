@@ -1,25 +1,33 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-const initialState = {
+type TInitialState = {
+  name: string;
+  email: string;
+  accessToken: string;
+  money?: number | null;
+};
+
+const initialState: TInitialState = {
   name: '',
   email: '',
   accessToken: '',
   money: 0,
 };
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser(state, action) {
-      state.email = action.payload.email;
-      state.name = action.payload.name;
-      state.accessToken = action.payload.accessToken;
+    setUser(state, {payload}: PayloadAction<TInitialState>) {
+      state.email = payload.email;
+      state.name = payload.name;
+      state.accessToken = payload.accessToken;
     },
-    setAccessToken(state, action) {
-      state.accessToken = action.payload;
+    setAccessToken(state, {payload}: PayloadAction<string>) {
+      state.accessToken = payload;
     },
-    setMoney(state, action) {
-      state.money = action.payload;
+    setMoney(state, {payload}: PayloadAction<number>) {
+      state.money = payload;
     },
   },
   extraReducers: () => {},
