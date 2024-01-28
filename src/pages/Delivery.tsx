@@ -1,19 +1,18 @@
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../App.tsx';
-import Ing from './Ing.tsx';
-import Complete from './Complete.tsx';
+import Complete from './Complete';
+import Ing from './Ing';
 
 const Stack = createNativeStackNavigator();
 
 function Delivery() {
   return (
-    // Stack Navigator를 사용하여 지도 screen을 띄운 상태에서 완료 창을 띄우기 위한 방식
-    <Stack.Navigator initialRouteName="Ing">
-      <Stack.Screen name="Ing" component={Ing} options={{headerShown: false}} />
+    <Stack.Navigator>
+      <Stack.Screen name="Ing" component={Ing} options={{title: '내 오더'}} />
       <Stack.Screen
-        name="Copmplete"
+        name="Complete"
         component={Complete}
-        options={{headerShown: false}}
+        options={{title: '완료하기'}}
       />
     </Stack.Navigator>
   );
