@@ -161,6 +161,11 @@ const styles = StyleSheet.create({
   },
   previewImage: {
     height: Dimensions.get('window').height / 3,
+
+    // 'contain': 미리보기 이미지가 틀에 딱 맞도록 위치 시킴
+    // 'cover': 모두 꽉채움 하지만 이미지가 잘릴 수 있음
+    // 'stretch': 늘려서 맞춰줌 = 비율이 망가짐
+    // 마치 background 이미지 지정하는 것과 비슷함 (center, repeat도 있음)
     resizeMode: 'contain',
   },
   buttonWrapper: {flexDirection: 'row', justifyContent: 'center'},

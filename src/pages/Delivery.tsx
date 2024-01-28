@@ -2,8 +2,9 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Complete from './Complete';
 import Ing from './Ing';
+import {LoggedInParamList} from '../../AppInner.tsx';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<LoggedInParamList>();
 
 function Delivery() {
   return (

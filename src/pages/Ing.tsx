@@ -7,7 +7,7 @@ import Geolocation from '@react-native-community/geolocation';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {LoggedInParamList} from '../../AppInner';
 
-type IngScreenProps = NativeStackScreenProps<LoggedInParamList, 'Delivery'>;
+type IngScreenProps = NativeStackScreenProps<LoggedInParamList, 'Ing'>;
 
 function Ing({navigation}: IngScreenProps) {
   console.dir(navigation);
