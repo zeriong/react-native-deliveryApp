@@ -38,15 +38,18 @@ function Complete() {
 
   const onResponse = useCallback(async (response: any) => {
     console.log(response.width, response.height, response.exif);
+    // 미리보기 이미지를 위한 setState. 이미지의 uri(경로)와 base64로 변환된 이미지를 삽입하고 아래 native Image 태그에 source에 넣어주면 된다.
     setPreview({uri: `data:${response.mime};base64,${response.data}`});
     const orientation = (response.exif as any)?.Orientation;
     console.log('orientation', orientation);
+    // 이미지 용량을 줄임 프론트에서 이미지를 리사이징해서 보내주어야 서버에 부하가 적어짐.
+    // 이미지는 대체로 용량이 많기 때문에 실제로 프론트에서 리사이징해주지 않는다면 서버가 터질 우려도 있음
     return ImageResizer.createResizedImage(
-      response.path,
+      response.path, // 파일 경로 (response.data랑은 다름!) / 파일의 경로 ex) file:///안드로이드 경로
       600,
       600,
       response.mime.includes('jpeg') ? 'JPEG' : 'PNG',
-      100,
+      100, // 줄일수록 용량이 줄고 사진 퀄리티도 낮아짐
       0,
     ).then(r => {
       console.log(r.uri, r.name);
@@ -61,9 +64,10 @@ function Complete() {
 
   const onTakePhoto = useCallback(() => {
     return ImagePicker.openCamera({
-      includeBase64: true,
-      includeExif: true,
-      saveToPhotos: true,
+      includeBase64: true, // 미리보기 표시를 위한 옵션
+      includeExif: true, // 촬영된 사진의 정방향이 어디인지 체크 후 인코딩해주는 옵션 (세로, 가로, 뒤집어 찍기 등에 대한 대응)
+      saveToPhotos: true, // 촬영 즉시 사진 저장
+      // cropping: true, // 촬영 후 업로드할 때 즉시 이미지 편집기로 이동
     })
       .then(onResponse)
       .catch(console.log);
