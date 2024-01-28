@@ -50,7 +50,7 @@ function Complete() {
       600,
       response.mime.includes('jpeg') ? 'JPEG' : 'PNG',
       100, // 줄일수록 용량이 줄고 사진 퀄리티도 낮아짐
-      0,
+      0, // 혹시나 이미지가 뒤집어지는 현상이 생길 경우 orientation변수를 활용하여 추가 코딩
     ).then(r => {
       console.log(r.uri, r.name);
 
@@ -66,7 +66,7 @@ function Complete() {
     return ImagePicker.openCamera({
       includeBase64: true, // 미리보기 표시를 위한 옵션
       includeExif: true, // 촬영된 사진의 정방향이 어디인지 체크 후 인코딩해주는 옵션 (세로, 가로, 뒤집어 찍기 등에 대한 대응)
-      saveToPhotos: true, // 촬영 즉시 사진 저장
+      saveToPhotos: true, // 촬영 즉시 사진 저장 (WRITE_EXTERNAL_STORAGE 권한 필요)
       // cropping: true, // 촬영 후 업로드할 때 즉시 이미지 편집기로 이동
     })
       .then(onResponse)
@@ -95,6 +95,7 @@ function Complete() {
       Alert.alert('알림', '유효하지 않은 주문입니다.');
       return;
     }
+    // 이미지는 폼데이터에 넣어서 보내준다.
     const formData = new FormData();
     formData.append('image', image);
     formData.append('orderId', orderId);
@@ -102,9 +103,11 @@ function Complete() {
       await axios.post(`${Config.API_URL}/complete`, formData, {
         headers: {
           authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data',
         },
       });
       Alert.alert('알림', '완료처리 되었습니다.');
+      // 오더완료 후 이전화면으로 돌아가기를 할 때 다시 Delivery로 돌아가는 현상을 막기 위해 뒤로 다시 돌아갔다가 navigate를 통해 Settings로 이동
       navigation.goBack();
       navigation.navigate('Settings');
       dispatch(orderSlice.actions.rejectOrder(orderId));
