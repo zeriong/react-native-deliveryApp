@@ -17,16 +17,15 @@ import userSlice from './src/slices/user';
 import {useAppDispatch} from './src/store';
 import Config from 'react-native-config';
 import orderSlice from './src/slices/order';
-import usePermissions from './src/hooks/usePermissions.ts';
+import usePermissions from './src/hooks/usePermissions';
+import SplashScreen from 'react-native-splash-screen';
 
 export type LoggedInParamList = {
   Orders: undefined;
   Settings: undefined;
   Delivery: undefined;
-  Ing?: undefined;
   Complete: {orderId: string};
 };
-
 export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
@@ -38,7 +37,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function AppInner() {
   const dispatch = useAppDispatch();
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
-  console.log('isLoggedIn', isLoggedIn);
 
   const [socket, disconnect] = useSocket();
 
@@ -50,6 +48,7 @@ function AppInner() {
       try {
         const token = await EncryptedStorage.getItem('refreshToken');
         if (!token) {
+          SplashScreen.hide();
           return;
         }
         const response = await axios.post(
@@ -76,6 +75,8 @@ function AppInner() {
         ) {
           Alert.alert('알림', '다시 로그인 해주세요.');
         }
+      } finally {
+        SplashScreen.hide();
       }
     };
     getTokenAndRefresh();
@@ -141,17 +142,26 @@ function AppInner() {
       <Tab.Screen
         name="Orders"
         component={Orders}
-        options={{title: '오더 목록'}}
+        options={{
+          title: '오더 목록',
+        }}
       />
       <Tab.Screen
         name="Delivery"
         component={Delivery}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          title: '지도',
+        }}
       />
       <Tab.Screen
         name="Settings"
         component={Settings}
-        options={{title: '내 정보'}}
+        options={{
+          title: '내 정보',
+
+          unmountOnBlur: true,
+        }}
       />
     </Tab.Navigator>
   ) : (
