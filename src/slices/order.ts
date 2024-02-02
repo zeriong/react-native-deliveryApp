@@ -48,7 +48,7 @@ const orderSlice = createSlice({
         state.deliveries.splice(delivery, 1);
       }
     },
-    setCompletes(state, {payload}: PayloadAction<Order[]>) {
+    setCompletes(state, {payload}) {
       state.completes = payload;
     },
   },
