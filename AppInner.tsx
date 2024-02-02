@@ -19,6 +19,9 @@ import Config from 'react-native-config';
 import orderSlice from './src/slices/order';
 import usePermissions from './src/hooks/usePermissions';
 import SplashScreen from 'react-native-splash-screen';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 export type LoggedInParamList = {
   Orders: undefined;
   Settings: undefined;
@@ -136,6 +139,7 @@ function AppInner() {
         component={Orders}
         options={{
           title: '오더 목록',
+          tabBarIcon: () => <FontAwesome5 name="list" size={20} />,
         }}
       />
       <Tab.Screen
@@ -144,6 +148,7 @@ function AppInner() {
         options={{
           headerShown: false,
           title: '지도',
+          tabBarIcon: () => <FontAwesome5 name="map" size={20} />,
         }}
       />
       <Tab.Screen
@@ -151,6 +156,7 @@ function AppInner() {
         component={Settings}
         options={{
           title: '내 정보',
+          tabBarIcon: () => <FontAwesome name="gear" size={20} />,
           unmountOnBlur: true,
         }}
       />
