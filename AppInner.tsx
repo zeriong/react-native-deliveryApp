@@ -19,30 +19,23 @@ import Config from 'react-native-config';
 import orderSlice from './src/slices/order';
 import usePermissions from './src/hooks/usePermissions';
 import SplashScreen from 'react-native-splash-screen';
-
 export type LoggedInParamList = {
   Orders: undefined;
   Settings: undefined;
   Delivery: undefined;
-  Ing: undefined;
   Complete: {orderId: string};
 };
 export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
 };
-
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
 function AppInner() {
   const dispatch = useAppDispatch();
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
-
   const [socket, disconnect] = useSocket();
-
   usePermissions();
-
   // 앱 실행 시 토큰 있으면 로그인하는 코드
   useEffect(() => {
     const getTokenAndRefresh = () => {
@@ -53,22 +46,22 @@ function AppInner() {
             SplashScreen.hide();
             return;
           }
-          console.log('리스폰스 전');
-          axios
-            .post(
-              `${Config.API_URL}/refreshToken`,
-              {},
-              {
-                headers: {
-                  authorization: `Bearer ${token}`,
-                },
+          const response = await axios.post(
+            `${Config.API_URL}/refreshToken`,
+            {},
+            {
+              headers: {
+                authorization: `Bearer ${token}`,
               },
-            )
-            .then(r => {
-              console.log(r);
-            })
-            .catch(e => console.log(e));
-          console.log('리스폰스 후');
+            },
+          );
+          dispatch(
+            userSlice.actions.setUser({
+              name: response.data.data.name,
+              email: response.data.data.email,
+              accessToken: response.data.data.accessToken,
+            }),
+          );
         } catch (error) {
           console.error(error);
           if (
@@ -84,7 +77,6 @@ function AppInner() {
     };
     getTokenAndRefresh();
   }, [dispatch]);
-
   useEffect(() => {
     const callback = (data: any) => {
       console.log(data);
@@ -100,14 +92,12 @@ function AppInner() {
       }
     };
   }, [dispatch, isLoggedIn, socket]);
-
   useEffect(() => {
     if (!isLoggedIn) {
       console.log('!isLoggedIn', !isLoggedIn);
       disconnect();
     }
   }, [isLoggedIn, disconnect]);
-
   useEffect(() => {
     axios.interceptors.response.use(
       response => {
@@ -139,7 +129,6 @@ function AppInner() {
       },
     );
   }, [dispatch]);
-
   return isLoggedIn ? (
     <Tab.Navigator>
       <Tab.Screen
@@ -162,7 +151,6 @@ function AppInner() {
         component={Settings}
         options={{
           title: '내 정보',
-
           unmountOnBlur: true,
         }}
       />
@@ -182,5 +170,4 @@ function AppInner() {
     </Stack.Navigator>
   );
 }
-
 export default AppInner;
