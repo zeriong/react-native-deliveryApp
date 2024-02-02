@@ -15,15 +15,17 @@ function Settings() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    async function getMoney() {
-      const response = await axios.get<{data: number}>(
-        `${Config.API_URL}/showmethemoney`,
-        {
-          headers: {authorization: `Bearer ${accessToken}`},
-        },
-      );
-      dispatch(userSlice.actions.setMoney(response.data.data));
-    }
+    const getMoney = () => {
+      (async () => {
+        const response = await axios.get<{data: number}>(
+          `${Config.API_URL}/showmethemoney`,
+          {
+            headers: {authorization: `Bearer ${accessToken}`},
+          },
+        );
+        dispatch(userSlice.actions.setMoney(response.data.data));
+      })();
+    };
     getMoney();
   }, [accessToken, dispatch]);
 
