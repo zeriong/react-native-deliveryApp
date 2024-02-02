@@ -24,6 +24,7 @@ export type LoggedInParamList = {
   Orders: undefined;
   Settings: undefined;
   Delivery: undefined;
+  Ing: undefined;
   Complete: {orderId: string};
 };
 export type RootStackParamList = {
@@ -52,22 +53,22 @@ function AppInner() {
             SplashScreen.hide();
             return;
           }
-          const response = await axios.post(
-            `${Config.API_URL}/refreshToken`,
-            {},
-            {
-              headers: {
-                authorization: `Bearer ${token}`,
+          console.log('리스폰스 전');
+          axios
+            .post(
+              `${Config.API_URL}/refreshToken`,
+              {},
+              {
+                headers: {
+                  authorization: `Bearer ${token}`,
+                },
               },
-            },
-          );
-          dispatch(
-            userSlice.actions.setUser({
-              name: response.data.data.name,
-              email: response.data.data.email,
-              accessToken: response.data.data.accessToken,
-            }),
-          );
+            )
+            .then(r => {
+              console.log(r);
+            })
+            .catch(e => console.log(e));
+          console.log('리스폰스 후');
         } catch (error) {
           console.error(error);
           if (
