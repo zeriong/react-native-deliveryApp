@@ -15,6 +15,7 @@ buildscript {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
+        classpath('com.google.gms:google-services:4.3.3')
     }
 }
 allprojects {
@@ -26,6 +27,9 @@ allprojects {
             url 'https://naver.jfrog.io/artifactory/maven/'
         }
     }
+}
+plugins {
+  id 'com.google.gms.google-services' version '4.4.0' apply false
 }
 
 apply plugin: "com.facebook.react.rootproject"
