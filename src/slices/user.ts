@@ -5,6 +5,7 @@ type TInitialState = {
   email: string;
   accessToken: string;
   money?: number | null;
+  phoneToken?: string;
 };
 
 const initialState: TInitialState = {
@@ -12,6 +13,7 @@ const initialState: TInitialState = {
   email: '',
   accessToken: '',
   money: 0,
+  phoneToken: '',
 };
 
 const userSlice = createSlice({
@@ -28,6 +30,9 @@ const userSlice = createSlice({
     },
     setMoney(state, {payload}: PayloadAction<number>) {
       state.money = payload;
+    },
+    setPhoneToken(state, {payload}: PayloadAction<string>) {
+      state.phoneToken = payload;
     },
   },
   extraReducers: () => {},

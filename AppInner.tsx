@@ -21,6 +21,7 @@ import usePermissions from './src/hooks/usePermissions';
 import SplashScreen from 'react-native-splash-screen';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import messaging from '@react-native-firebase/messaging';
 
 export type LoggedInParamList = {
   Orders: undefined;
@@ -38,7 +39,10 @@ function AppInner() {
   const dispatch = useAppDispatch();
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
   const [socket, disconnect] = useSocket();
+
+  // 권한 요청 훅
   usePermissions();
+
   // 앱 실행 시 토큰 있으면 로그인하는 코드
   useEffect(() => {
     const getTokenAndRefresh = () => {
@@ -80,6 +84,8 @@ function AppInner() {
     };
     getTokenAndRefresh();
   }, [dispatch]);
+
+  // 웹소켓 실행
   useEffect(() => {
     const callback = (data: any) => {
       console.log(data);
@@ -95,43 +101,74 @@ function AppInner() {
       }
     };
   }, [dispatch, isLoggedIn, socket]);
+
+  // 로그아웃인 경우 웹소켓 해제
   useEffect(() => {
     if (!isLoggedIn) {
       console.log('!isLoggedIn', !isLoggedIn);
       disconnect();
     }
   }, [isLoggedIn, disconnect]);
+
+  // refreshToken으로 토큰 재발급
   useEffect(() => {
     axios.interceptors.response.use(
       response => {
         return response;
       },
       async error => {
-        const {
-          config,
-          response: {status},
-        } = error;
-        if (status === 419) {
-          if (error.response.data.code === 'expired') {
-            const originalRequest = config;
-            const refreshToken = await EncryptedStorage.getItem('refreshToken');
-            // token refresh 요청
-            const {data} = await axios.post(
-              `${Config.API_URL}/refreshToken`, // token refresh api
-              {},
-              {headers: {authorization: `Bearer ${refreshToken}`}},
-            );
-            // 새로운 토큰 저장
-            dispatch(userSlice.actions.setAccessToken(data.data.accessToken));
-            originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
-            // 419로 요청 실패했던 요청 새로운 토큰으로 재요청
-            return axios(originalRequest);
+        if (error.response) {
+          const {
+            config,
+            response: {status},
+          } = error;
+          if (status === 419) {
+            if (error.response.data.code === 'expired') {
+              const originalRequest = config;
+              const refreshToken = await EncryptedStorage.getItem(
+                'refreshToken',
+              );
+              // token refresh 요청
+              const {data} = await axios.post(
+                `${Config.API_URL}/refreshToken`, // token refresh api
+                {},
+                {headers: {authorization: `Bearer ${refreshToken}`}},
+              );
+              // 새로운 토큰 저장
+              dispatch(userSlice.actions.setAccessToken(data.data.accessToken));
+              originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
+              // 419로 요청 실패했던 요청 새로운 토큰으로 재요청
+              return axios(originalRequest);
+            }
           }
+          return Promise.reject(error);
         }
-        return Promise.reject(error);
       },
     );
   }, [dispatch]);
+
+  // 토큰 설정
+  useEffect(() => {
+    const getToken = () => {
+      (async () => {
+        try {
+          // 기기 등록이 되어있지 않다면 등
+          if (!messaging().isDeviceRegisteredForRemoteMessages) {
+            await messaging().registerDeviceForRemoteMessages();
+          }
+          const token = await messaging().getToken();
+          console.log('phone token', token);
+          // 리덕스에 알림토큰 저장
+          dispatch(userSlice.actions.setPhoneToken(token));
+          return axios.post(`${Config.API_URL}/phonetoken`, {token});
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    };
+    getToken();
+  }, [dispatch]);
+
   return isLoggedIn ? (
     <Tab.Navigator>
       <Tab.Screen
