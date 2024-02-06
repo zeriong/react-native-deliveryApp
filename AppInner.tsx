@@ -145,15 +145,11 @@ function AppInner() {
               // 419로 요청 실패했던 요청 새로운 토큰으로 재요청
               return axios(originalRequest);
             }
-            // console.log(error.response.data.message);
-            // return Alert.alert('알림', '다시 로그인 해주세요.');
-            return console.log(error.response.data.message);
+            return Promise.reject(error);
           }
-          // return Alert.alert('알림', '다시 로그인 해주세요.');
-          return console.log(error.response.data.message);
+          return Promise.reject(error);
         }
-        // return Alert.alert('알림', '다시 로그인 해주세요.');
-        return console.log(error.response.data.message);
+        return Promise.reject(error);
       },
     );
   }, [dispatch]);

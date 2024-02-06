@@ -9,3 +9,5 @@
 
 # Add any project specific keep options here:
 -keep class com.zeriong.fooddeliveryapp.BuildConfig { *; }
+-keep class com.facebook.hermes.unicode.** { *; }
+-keep class com.facebook.jni.** { *; }
